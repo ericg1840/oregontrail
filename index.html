@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Oregon Trail</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="screen-root" class="crt">
+  <!-- ===================== TITLE ===================== -->
+  <section id="screen-title" class="screen active">
+    <pre class="ascii-title">
+ _______  _______  _______  _______  _______  _
+(  ___  )(  ____ )(  ____ \(  ____ \(  ___  )( (    /|
+| (   ) || (    )|| (    \/| (    \/| (   ) ||  \  ( |
+| |   | || (____)|| (__    | |      | |   | ||   \ | |
+| |   | ||     __)|  __)   | | ____ | |   | || (\ \) |
+| |   | || (\ (   | (      | | \_  )| |   | || | \   |
+| (___) || ) \ \__| (____/\| (___) || (___) || )  \  |
+(_______)|/   \__/(_______/(_______)(_______)|/    )_)
+    </pre>
+    <h1>THE OREGON TRAIL</h1>
+    <p class="subtitle">A journey from Independence, Missouri to Oregon's Willamette Valley &mdash; 1848</p>
+    <button id="btn-start" class="big">Press ENTER to Start</button>
+    <button id="btn-scores">High Scores</button>
+  </section>
+
+  <!-- ===================== PROFESSION ===================== -->
+  <section id="screen-profession" class="screen">
+    <h2>Choose Your Profession</h2>
+    <p>Your choice determines your difficulty and your starting funds.</p>
+    <div class="choice-grid" id="profession-choices"></div>
+  </section>
+
+  <!-- ===================== NAMES ===================== -->
+  <section id="screen-names" class="screen">
+    <h2>Name Your Party</h2>
+    <p>You are the wagon leader. Name yourself and four companions.</p>
+    <form id="form-names">
+      <label>Leader (you): <input type="text" id="name-0" maxlength="16" required></label>
+      <label>Party member 2: <input type="text" id="name-1" maxlength="16" required></label>
+      <label>Party member 3: <input type="text" id="name-2" maxlength="16" required></label>
+      <label>Party member 4: <input type="text" id="name-3" maxlength="16" required></label>
+      <label>Party member 5: <input type="text" id="name-4" maxlength="16" required></label>
+      <button type="submit" class="big">Continue</button>
+    </form>
+  </section>
+
+  <!-- ===================== MONTH ===================== -->
+  <section id="screen-month" class="screen">
+    <h2>Choose Your Departure Month</h2>
+    <p>Leave too early and rivers run high with snowmelt. Leave too late and you may be caught by winter snows in the mountains.</p>
+    <div class="choice-grid" id="month-choices"></div>
+  </section>
+
+  <!-- ===================== STORE ===================== -->
+  <section id="screen-store" class="screen">
+    <h2>Matt's General Store &mdash; Independence, Missouri</h2>
+    <div class="store-layout">
+      <div class="store-items" id="store-items"></div>
+      <div class="store-summary">
+        <p>Cash on hand: $<span id="store-cash">0</span></p>
+        <h3>Your Wagon</h3>
+        <ul id="store-cart"></ul>
+        <button id="btn-store-done" class="big">Leave for the Trail</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TRAVEL ===================== -->
+  <section id="screen-travel" class="screen">
+    <div class="travel-hud">
+      <div>Date: <span id="hud-date"></span></div>
+      <div>Weather: <span id="hud-weather"></span></div>
+      <div>Health: <span id="hud-health"></span></div>
+      <div>Food: <span id="hud-food"></span> lbs</div>
+      <div>Next: <span id="hud-next"></span></div>
+    </div>
+    <div class="trail-scene">
+      <canvas id="trail-canvas" width="640" height="160"></canvas>
+    </div>
+    <div class="travel-distances">
+      <span>From: <span id="hud-from-name"></span> (<span id="hud-from-dist"></span> mi)</span>
+      <span>To: <span id="hud-to-name"></span> (<span id="hud-to-dist"></span> mi)</span>
+    </div>
+    <div class="event-log" id="event-log"></div>
+    <div class="travel-menu" id="travel-menu">
+      <button data-action="continue">1. Continue on Trail</button>
+      <button data-action="checkSupplies">2. Check Supplies</button>
+      <button data-action="viewMap">3. Look at Map</button>
+      <button data-action="changePace">4. Change Pace</button>
+      <button data-action="changeRations">5. Change Food Rations</button>
+      <button data-action="stopToRest">6. Stop to Rest</button>
+      <button data-action="trade">7. Trade</button>
+      <button data-action="hunt">8. Hunt</button>
+    </div>
+  </section>
+
+  <!-- ===================== LANDMARK ===================== -->
+  <section id="screen-landmark" class="screen">
+    <h2 id="landmark-title"></h2>
+    <div id="landmark-body"></div>
+  </section>
+
+  <!-- ===================== RIVER ===================== -->
+  <section id="screen-river" class="screen">
+    <h2 id="river-title"></h2>
+    <div class="river-scene"><canvas id="river-canvas" width="640" height="160"></canvas></div>
+    <p id="river-desc"></p>
+    <div class="choice-grid" id="river-choices"></div>
+  </section>
+
+  <!-- ===================== HUNT ===================== -->
+  <section id="screen-hunt" class="screen">
+    <h2>Hunting</h2>
+    <p>Arrow keys / WASD to move &amp; aim, SPACE to shoot. Ammo: <span id="hunt-ammo"></span> &mdash; Meat: <span id="hunt-meat"></span> lbs</p>
+    <canvas id="hunt-canvas" width="640" height="360"></canvas>
+    <button id="btn-hunt-end">End Hunt</button>
+  </section>
+
+  <!-- ===================== RAFT ===================== -->
+  <section id="screen-raft" class="screen">
+    <h2>Rafting the Columbia River</h2>
+    <p>Arrow keys / A D to steer around the rocks!</p>
+    <canvas id="raft-canvas" width="640" height="400"></canvas>
+  </section>
+
+  <!-- ===================== GRAVE ===================== -->
+  <section id="screen-grave" class="screen">
+    <div class="grave-scene">
+      <pre class="tombstone">
+   _____________
+  /             \
+ /  R.I.P.       \
+ |                |
+ |  <span id="grave-name"></span>
+ |  <span id="grave-year"></span>
+ |                |
+ |________________|
+      </pre>
+    </div>
+    <p id="grave-cause"></p>
+    <div id="grave-input-wrap">
+      <label>Enter an epitaph: <input type="text" id="grave-epitaph" maxlength="40"></label>
+      <button id="btn-grave-save">Save</button>
+    </div>
+    <button id="btn-grave-continue" class="big" style="display:none">Continue</button>
+  </section>
+
+  <!-- ===================== END / SCORE ===================== -->
+  <section id="screen-end" class="screen">
+    <h2 id="end-title"></h2>
+    <p id="end-summary"></p>
+    <h3>Final Score: <span id="end-score"></span></h3>
+    <div id="end-scoretable"></div>
+    <button id="btn-end-restart" class="big">Play Again</button>
+  </section>
+
+  <!-- ===================== SCORES (standalone view) ===================== -->
+  <section id="screen-scores" class="screen">
+    <h2>High Scores</h2>
+    <div id="scores-table"></div>
+    <button id="btn-scores-back">Back</button>
+  </section>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/state.js"></script>
+<script src="js/score.js"></script>
+<script src="js/store.js"></script>
+<script src="js/river.js"></script>
+<script src="js/hunt.js"></script>
+<script src="js/raft.js"></script>
+<script src="js/grave.js"></script>
+<script src="js/travel.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
